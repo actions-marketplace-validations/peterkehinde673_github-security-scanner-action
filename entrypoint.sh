@@ -15,7 +15,6 @@ case "$repository" in
   *) echo "::error::repository must be a GitHub HTTPS repository URL"; exit 2 ;;
 esac
 
-# Convert the URL to the owner/repo identifier expected by the scanner API.
 repo_full_name=$(printf '%s' "$repository" | python3 -c 'import sys,urllib.parse; u=urllib.parse.urlparse(sys.stdin.read().strip()); p=u.path.strip("/").removesuffix(".git"); parts=p.split("/"); print("/".join(parts[:2]) if len(parts)==2 else "")')
 if [[ -z "$repo_full_name" ]]; then
   echo "::error::Invalid GitHub repository URL"
@@ -84,10 +83,11 @@ except json.JSONDecodeError:
     print('::error::Scanner returned invalid JSON')
     sys.exit(1)
 
-score = data.get('score')
+metrics = data.get('metrics')
+score = metrics.get('score') if isinstance(metrics, dict) else data.get('score')
 findings = data.get('findings') or []
 
-if not isinstance(score, (int, float)):
+if not isinstance(score, (int, float)) or isinstance(score, bool):
     print('::error::Scanner response did not contain a valid score')
     sys.exit(1)
 if not isinstance(findings, list):
@@ -104,7 +104,6 @@ for finding in findings:
         if severity in counts:
             counts[severity] += 1
 
-# Keep outputs intentionally small and free of finding evidence/secrets.
 with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
     out.write(f"score={score}\n")
     out.write(f"findings={len(findings)}\n")
