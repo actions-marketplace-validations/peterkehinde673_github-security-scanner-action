@@ -24,8 +24,6 @@ outputs:
     description: 'Deterministic security score from 0 to 100.'
   findings:
     description: 'Total number of findings.'
-  report-url:
-    description: 'Web report URL when available.'
 
 runs:
   using: 'composite'
