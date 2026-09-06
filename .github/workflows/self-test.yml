@@ -14,6 +14,6 @@ jobs:
       - name: Check out action
         uses: actions/checkout@v4
       - name: Run action
-        uses: ./
+        uses: peterkehinde673/github-security-scanner-action@v1
         with:
           fail-on: critical
