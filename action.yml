@@ -1,0 +1,40 @@
+name: 'GitHub Security Scanner'
+description: 'Scan a public GitHub repository for secrets, dangerous code patterns, dependency risks, and security configuration issues.'
+author: 'Kehinde Babatunde'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  repository:
+    description: 'Repository URL to scan. Defaults to the repository running the workflow.'
+    required: false
+    default: ''
+  scanner-url:
+    description: 'Base URL of the GitHub Security Scanner API.'
+    required: false
+    default: 'https://github-security-scanner.onrender.com'
+  fail-on:
+    description: 'Minimum severity that causes the workflow to fail: critical, high, medium, or low.'
+    required: false
+    default: 'high'
+
+outputs:
+  score:
+    description: 'Deterministic security score from 0 to 100.'
+  findings:
+    description: 'Total number of findings.'
+  report-url:
+    description: 'Web report URL when available.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run GitHub Security Scanner
+      shell: bash
+      env:
+        INPUT_REPOSITORY: ${{ inputs.repository }}
+        INPUT_SCANNER_URL: ${{ inputs.scanner-url }}
+        INPUT_FAIL_ON: ${{ inputs.fail-on }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+      run: bash "${{ github.action_path }}/entrypoint.sh"
