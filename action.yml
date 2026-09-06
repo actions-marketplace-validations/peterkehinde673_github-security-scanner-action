@@ -22,13 +22,16 @@ inputs:
 outputs:
   score:
     description: 'Deterministic security score from 0 to 100.'
+    value: ${{ steps.scan.outputs.score }}
   findings:
     description: 'Total number of findings.'
+    value: ${{ steps.scan.outputs.findings }}
 
 runs:
   using: 'composite'
   steps:
     - name: Run GitHub Security Scanner
+      id: scan
       shell: bash
       env:
         INPUT_REPOSITORY: ${{ inputs.repository }}
