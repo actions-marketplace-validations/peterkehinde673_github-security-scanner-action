@@ -1,0 +1,19 @@
+name: Action self-test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out action
+        uses: actions/checkout@v4
+      - name: Run action
+        uses: ./
+        with:
+          fail-on: critical
