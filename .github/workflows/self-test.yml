@@ -19,7 +19,7 @@ jobs:
           - https://github.com/pallets/flask
           - https://github.com/fastify/fastify
           - https://github.com/vitejs/vite
-          - https://github.com/github/docs
+          - https://github.com/sindresorhus/slugify
     steps:
       - name: Check out action
         uses: actions/checkout@v4
