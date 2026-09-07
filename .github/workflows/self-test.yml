@@ -10,10 +10,20 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repository:
+          - https://github.com/octocat/Hello-World
+          - https://github.com/expressjs/express
+          - https://github.com/pallets/flask
+          - https://github.com/fastify/fastify
+          - https://github.com/vitejs/vite
     steps:
       - name: Check out action
         uses: actions/checkout@v4
       - name: Run action
         uses: peterkehinde673/github-security-scanner-action@v1
         with:
+          repository: ${{ matrix.repository }}
           fail-on: critical
